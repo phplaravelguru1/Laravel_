@@ -75,13 +75,7 @@ class LeagueController extends Controller
         $league->start_datetime = date("Y-m-d h:i:s", Carbon::now()->timestamp);
         $league->end_datetime = date("Y-m-d h:i:s", Carbon::now()->timestamp);
         $league->type = $request->league_type;
-        $league->is_banterboard = $banter;
-        $league->league_name = $request->league_name;
-        $league->round_to_start = $request->round_to_start;
-        $league->current_round_id = $request->round_to_start;
-        $league->sport_id = $request->sport_id;
-        $league->is_private = $request->is_private;
-        $league->if_forfeit = $request->if_forfeit;
+       
 
         if($league->save()){
 
@@ -177,13 +171,7 @@ class LeagueController extends Controller
         // print_r($Alldata); die;
         $data['league_name'] = $request->league_name;
         $data['sport_id'] = $request->sport_id;
-        $data['round_to_start'] = $request->round_to_start;
-        $data['current_round_id'] = $request->round_to_start;
-        $data['type'] = $request->league_type;
-        $data['is_private'] = $request->is_private;
-        $data['if_forfeit'] = $request->if_forfeit;
-
-        $data['is_banterboard'] = $request->is_banterboard;
+      
 
         $data['start_datetime'] = date("Y-m-d h:i:s", Carbon::now()->timestamp);
         $data['end_datetime'] = date("Y-m-d h:i:s", Carbon::now()->timestamp);
@@ -196,8 +184,6 @@ class LeagueController extends Controller
 
                 $locationData['league_town'] = (isset($Alldata['league_town']) && $Alldata['league_town'] != "") ;
                 $locationData['league_city'] = $Alldata['league_city'];
-                $locationData['league_state'] = $Alldata['league_state'];
-                $locationData['league_country'] = $Alldata['league_country'];
 
                 $this->location->updatedata(array('league_id'=>$id),$locationData);
 

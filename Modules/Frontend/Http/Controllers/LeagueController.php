@@ -36,46 +36,6 @@ class LeagueController extends Controller
        $this->round = new TeamSelection($round);
    }
 
-    public function sendInvite(Request $request)
-    {
-
-        if($request->has('desc') && !empty($request->desc)){
-        	$explode=  array();
-          if (strpos(trim($request->desc), ',') !== false) {
-          	$allEmail = explode(',', trim($request->desc));
-            $allEmail = array_unique($allEmail);
-            $allEmailChecked = false;
-          	foreach($allEmail as $emailL) {
-          		    $email = trim( $emailL );
-    			 if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-                  $allEmailChecked= false;
-                  return Response::json(['message' => 'Invalid email format', 'status' => 'failed']);
-    			 }else{
-                   $allEmailChecked= true;
-                   $this->mailHandler($email, $request->leagueid);
-    			    }
-			    }
-          if($allEmailChecked) {
-            return Response::json(['message' => 'Invitation has been sent!', 'status' => 'success']);
-          }
-          } else {
-           if (!filter_var(trim($request->desc), FILTER_VALIDATE_EMAIL)) {
-                return Response::json(['message' => 'Invalid email format', 'status' => 'failed']);
-            } else {
-                $this->mailHandler(trim($request->desc), $request->leagueid);
-                return Response::json(['message' => 'Invitation has been sent!', 'status' => 'success']);
-            }
-          }
-          // echo "<pre>";
-          // print_r($explode);
-          // die;
-        }
-        else{
-           return Response::json(['message' => 'Please enter the emails!', 'status' => 'failed']);
-        }
-
-    }
-
     public function mailHandler($to, $leaugeId) {
       $subject= 'Leauge Invitation for League id:-'.$leaugeId;
       $mode = 'system';
@@ -150,29 +110,7 @@ class LeagueController extends Controller
     	} 
 
     	$isKnockedOut = UsersLeague::where('league_id',$l_id)->where('user_id',Auth::id())->value('is_knockedout');
-    	if( $isKnockedOut!='yes' ) {
-    	  $round = Round::find($r_id);	
-          $roundStartTime = date("Y-m-d H:i:s",strtotime("-15 minutes", strtotime($round->start_datetime)));
-          $now = date('Y-m-d H:i:s');
-          if(strtotime($roundStartTime) >= strtotime($now)) {
-
-          	   $filterFixture = $this->round->getTeamtoSelect($r_id, $s_id, $l_id);
-
-          	   $selectedTeam = SavedTeam::where('user_id',Auth::id())->where('league_id',$l_id)->where('round_id',$r_id)->first();
-               $prtd = 0;
-               if(!empty($selectedTeam)) {
-               	$selectedTeam = $selectedTeam->fixture_id.'-'.$selectedTeam->team_id;
-               	$prtd = 1;
-               } else {
-               	$selectedTeam = null;
-               }
-              return response()->json(new JsonResponse(['status' => 'success','data' => $filterFixture,'selectedTeam' => $selectedTeam]));
-          }else{
-             return response()->json(new JsonResponse(['status' => 'failed','message' => 'Opps!, You are too late to join this Round!']));
-          }
-    	} else {
-           return response()->json(new JsonResponse(['status' => 'failed','message' => 'Opps!, You are already knocked out from this League!']));
-    	}
+    	
     }
     
 

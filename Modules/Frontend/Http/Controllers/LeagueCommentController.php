@@ -179,10 +179,6 @@ class LeagueCommentController extends Controller
                 echo "false";
               }
           }
-          // foreach($UsersNameArray as $userName){
-          //   $user = User::where('first_name',$userName)->first();
-          //   echo $user->id;
-          // }
           
 
 

@@ -81,17 +81,6 @@ class FixtureController extends Controller
         for ($i=1; $i <= $request->fixture_number; $i++) {
                 $data = array();
                 $data['sport_id'] = $request->sport_id;
-                $data['round_id'] = $request->round_id;
-                $data['fixture_name'] = $request->fixture_name[$i];
-                $data['home_team_id'] = $request->home_team_id[$i];
-                $data['away_team_id'] = $request->away_team_id[$i];
-                // $data['match_datetime'] = date('Y-m-d H:i:s',strtotime('+5 hour +30 minutes',strtotime($request->match_datetime[$i])));
-
-                $data['match_datetime'] = $request->match_datetime[$i];
-
-                $data['added_by'] = Auth::user()->id;
-
-                // print_r($data); exit();
 
                 $this->model->create($data);    
         }
